@@ -1,0 +1,26 @@
+============================================================
+PROJETO: ORGANIZAÇÃO DE DADOS (UFCD 10797)
+FICHEIRO: agendamento.txt
+============================================================
+
+1. CONCEITO DE AUTOMAÇÃO CLOUD NATIVA (pg_cron)
+Nas infraestruturas modernas de Cloud Serverless (Neon), o agendador nativo (pg_cron) corre por defeito na base de dados de sistema 'postgres'. Através de comandos SQL, eliminamos a necessidade de aceder a um terminal Linux ou gerir servidores cron externos.
+
+2. COMANDOS DE CONFIGURAÇÃO E CRIAÇÃO:
+-- Ativação da extensão de automação
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+-- Agendamento de teste (Executado a cada minuto)
+SELECT cron.schedule('teste-agendamento-aula', '* * * * *', $$ SELECT 1 $$);
+
+-- Agendamento de produção para a Organização (Todos os dias às 08:00 da manhã)
+SELECT cron.schedule('backup-diario-organizacao', '0 8 * * *', $$ CALL sp_backup_diario() $$);
+
+3. AUDITORIA E LIVRO DE OCORRÊNCIAS (LOGS):
+Para monitorizar a saúde e o sucesso das tarefas automáticas à noite, consultamos a tabela interna do sistema:
+SELECT * FROM cron.job_run_details ORDER BY start_time DESC;
+
+Se o status for 'succeeded', a tarefa concluiu com sucesso. Se for 'failed', a coluna 'return_message' guarda o registo de erro (equivalente ao operador de redirecionamento 2>&1).
+
+4. LIMPEZA DE ROTINAS DE TESTE:
+SELECT cron.unschedule('teste-agendamento-aula');
