@@ -1,0 +1,27 @@
+============================================================
+PROJETO: ORGANIZAÇÃO DE DADOS (UFCD 10797)
+FICHEIRO: manutencao.txt
+============================================================
+
+1. PAINEL DE INSTRUMENTOS (Vistas de Sistema do PostgreSQL)
+Para monitorizar a saúde e prever falhas no sistema da Organização sem recorrer ao terminal Linux tradicional (comando top), utilizamos as tabelas internas de estatísticas:
+
+A. Rastreio de Processos Bloqueados / Consumo de CPU:
+SELECT pid, usename, state, query, backend_start FROM pg_stat_activity WHERE state != 'idle';
+
+B. Auditoria de Integridade e Transações Falhadas:
+SELECT datname, numbackends, xact_commit, xact_rollback FROM pg_stat_database WHERE datname = current_database();
+
+2. PLANO DE MANUTENÇÃO FÍSICA (VACUUMING)
+Sempre que são efetuadas operações de UPDATE ou DELETE, o PostgreSQL gera fragmentação (bloated space). O comando utilizado para limpar o lixo físico, libertar espaço e atualizar as estatísticas do otimizador de consultas é:
+VACUUM ANALYZE;
+
+3. RESPOSTAS DE CONSOLIDAÇÃO TÉCNICA:
+Perg. 1: Se o servidor ficar lento, qual o primeiro comando a usar para ver quem gasta CPU?
+Resp. 1: O comando 'top' no Linux, ou consultar a vista 'pg_stat_activity' no PostgreSQL.
+
+Perg. 2: Para que serve o 'VACUUM'?
+Resp. 2: Para limpar o 'lixo' e as linhas mortas deixadas pelos dados apagados, mantendo a base de dados rápida.
+
+Perg. 3: Se não tiverem acesso ao Neon SQL Editor, onde vão procurar a causa de um erro de ligação?
+Resp. 3: No painel gráfico de 'Logs' do Neon Console ou nos ficheiros de logs do servidor.
