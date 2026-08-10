@@ -27,6 +27,10 @@ INSERT INTO Produtos (titulo, preco, stock) VALUES
 -- Consultar a tabela para a evidência
 SELECT * FROM Utilizadores;
 
+
+
+
+--HORA 3:
 -- ============================================================
 -- PROJETO: ORGANIZAÇÃO DE DADOS (UFCD 10797)
 -- Ficheiro para o GitHub: schema.sql
